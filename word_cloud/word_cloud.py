@@ -12,7 +12,7 @@ stopwords.add("мы")
 stopwords.add("что")
 stopwords.add("нам")
 
-wordcloud = WordCloud(background_color="black", stopwords=stopwords, width=300, height=300, max_words=100,
+wordcloud = WordCloud(background_color="black", stopwords=stopwords, width=600, height=600, max_words=100,
                       contour_width=0, contour_color='green').generate(text)
 
 wordcloud.to_file("img/word_cloud.png")
