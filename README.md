@@ -8,3 +8,6 @@ Mini projects on Python
 
 ![word_cloud](https://user-images.githubusercontent.com/62501274/198727662-605cd2f3-ba0b-4dec-bb70-f286746f6454.png)
 
+2. Work with excel. Creade xlsx report:
+
+![image](https://user-images.githubusercontent.com/62501274/198856049-75115282-37f7-40a0-a28f-aecc887e43ff.png)
