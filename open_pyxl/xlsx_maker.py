@@ -7,7 +7,7 @@ header = ['id', 'Name', 'phone', 'wages']
 data = [[1, 'John', '+19545565444', 500.05],
         [2, 'Vlasya', '+19545565445', 499.05],
         [3, 'Kostya', '+19545565446', 499.45],
-        [4, 'Mary', '+19545565447', 1499.45],]
+        [4, 'Mary', '+19545565447', 1499.45], ]
 
 workbook = Workbook()
 worksheet = workbook.active
@@ -26,6 +26,7 @@ worksheet.cell(row=2, column=1, value="My favorite report")
 
 row = 4
 sum_column_letter = str()
+
 # Fill header.
 for i, value in enumerate(header, start=1):
     worksheet.cell(row=row, column=i, value=value).border = thin_border
@@ -46,6 +47,7 @@ for values in data:
         else:
             column_widths += [len(str(value)) + 5]
 
+# Set cells width.
 for i, column_width in enumerate(column_widths, 1):
     worksheet.column_dimensions[get_column_letter(i)].width = column_width
 
