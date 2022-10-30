@@ -11,4 +11,5 @@ Mini projects on Python
 
 **2. Work with excel. Create xlsx report:**
 
-![image](https://user-images.githubusercontent.com/62501274/198856049-75115282-37f7-40a0-a28f-aecc887e43ff.png)
+![image](https://user-images.githubusercontent.com/62501274/198857212-2d1e7be3-4892-4327-ba9b-832c5dc55f50.png)
+
