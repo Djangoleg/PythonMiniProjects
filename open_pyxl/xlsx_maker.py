@@ -45,7 +45,8 @@ for i, column_width in enumerate(column_widths, 1):
 
 # Formula.
 column_index = len(data[0])
+column_letter = get_column_letter(column_index)
 worksheet.cell(row=row + 1, column=column_index,
-               value=f'=SUM({get_column_letter(column_index) + str(5)}:{get_column_letter(column_index) + str(row)})').border = thin_border
+               value=f'=SUM({column_letter + str(5)}:{column_letter + str(row)})').border = thin_border
 
 workbook.save(filename='xlfiles\Test.xlsx')
