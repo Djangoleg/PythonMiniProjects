@@ -2,12 +2,11 @@ from openpyxl import Workbook
 from openpyxl.styles.borders import Border, Side, BORDER_THIN
 from openpyxl.utils import get_column_letter
 
-header = ['id', 'Name', 'phone', 'wages']
-
-data = [[1, 'John', '+19545565444', 500.05],
+data = [['id', 'Name', 'phone', 'wages'],
+        [1, 'John', '+19545565444', 500.05],
         [2, 'Vlasya', '+19545565445', 499.05],
         [3, 'Kostya', '+19545565446', 499.45],
-        [4, 'Mary', '+19545565447', 1499.45], ]
+        [4, 'Mary', '+19545565447', 1499.45]]
 
 workbook = Workbook()
 worksheet = workbook.active
@@ -24,14 +23,7 @@ thin_border = Border(
 
 worksheet.cell(row=2, column=1, value="My favorite report")
 
-row = 4
-sum_column_letter = str()
-
-# Fill header.
-for i, value in enumerate(header, start=1):
-    worksheet.cell(row=row, column=i, value=value).border = thin_border
-    sum_column_letter = worksheet.cell(row=row, column=i).column_letter
-
+row = 3
 column_widths = []
 
 # Fill data.
@@ -52,8 +44,8 @@ for i, column_width in enumerate(column_widths, 1):
     worksheet.column_dimensions[get_column_letter(i)].width = column_width
 
 # Formula.
-if sum_column_letter:
-    worksheet.cell(row=row + 1, column=len(header),
-                   value=f'=SUM({sum_column_letter + str(5)}:{sum_column_letter + str(row)})').border = thin_border
+column_index = len(data[0])
+worksheet.cell(row=row + 1, column=column_index,
+               value=f'=SUM({get_column_letter(column_index) + str(5)}:{get_column_letter(column_index) + str(row)})').border = thin_border
 
 workbook.save(filename='xlfiles\Test.xlsx')
