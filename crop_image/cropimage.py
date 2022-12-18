@@ -3,19 +3,21 @@ from pathlib import Path
 
 from PIL import Image
 
-
-def crop_image(image_path, area):
-    image_file = Path(image_path)
-    image = Image.open(image_file.absolute())
-    img = image.crop(area)
-    new_img = os.path.join(os.path.dirname(image_file), image_file.stem + '_crop' + image_file.suffix)
-    img.save(Path(new_img).absolute())
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    area = (300, 300, 700, 700)
-    image_path = os.path.join('img', "dog_photo2.jpg")
-    crop_image(image_path, area)
+    image_path = Path(os.path.join('img', "dog_photo.jpg"))
+    image = Image.open(image_path.absolute())
 
+    width, height = image.size  # Get dimensions
+    new_width = 600
+    new_height = 600
 
+    left = (width - new_width) / 2
+    top = (height - new_height) / 2
+    right = (width + new_width) / 2
+    bottom = (height + new_height) / 2
+
+    area = (left, top, right, bottom)
+    img = image.crop(area)
+
+    new_img = os.path.join(os.path.dirname(image_path), image_path.stem + '_crop' + image_path.suffix)
+    img.save(Path(new_img).absolute())
