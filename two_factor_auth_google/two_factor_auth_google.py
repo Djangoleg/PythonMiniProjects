@@ -2,6 +2,7 @@ import pyotp
 import qrcode
 
 # it is important. Length 32
+# pyotp.random_base32() -> WUPEY3MK7JOHWQRMRPGEETIQOWKB7Y6O
 key = "KrolegTestIsBestForEverythingBro"
 
 uri = pyotp.totp.TOTP(key).provisioning_uri(
@@ -18,7 +19,5 @@ totp = pyotp.TOTP(key)
 # verifying the code
 while True:
     print(totp.verify(input("Enter the Code : ")))
-
-
 
 
