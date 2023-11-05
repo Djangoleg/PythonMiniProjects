@@ -7,10 +7,10 @@ movies = pd.read_csv("movies.csv", index_col='Title')
 # pandas.core.frame.DataFrame
 # print(movies)
 
-# print first 10 rows
-# print(movies.head(10))
+# Print first 10 rows.
+print(movies.head(10))
 
-# print last 10 rows
+# Print last 10 rows.
 # print(movies.tail(10))
 
 print(f'DataFrame movies len = {len(movies)}')
@@ -35,5 +35,25 @@ print(f'DataFrame movies get line by name: \n{movies.loc["Gravity"]}')
 
 print()
 
+# sort_values.
+movies_sort = movies.sort_values(by=['Year', 'Studio'], ascending=True).head(20)
 
+# DataFrame to string.
+print(movies_sort.to_string())
+
+# DataFrame to numpy. Here you can take the values.
+for rows in movies_sort.to_numpy():
+    [print(row) for row in rows]
+    print('=' * 20)
+
+print()
+
+# Sort by index column (index_col='Title').
+print(movies.sort_index().head(10).to_string())
+
+print()
+
+# Extract a column 'Studio' and get count.
+studio = movies["Studio"]
+print(studio.value_counts().head(10).to_string())
 
