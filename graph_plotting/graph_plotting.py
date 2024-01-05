@@ -1,37 +1,103 @@
+from collections import OrderedDict
+from datetime import date
+
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FormatStrFormatter
+
+CURRENCY_DICT = {
+    date(2023, 10, 1): {
+        'currencylayer': {
+            'USD': 91.3503,
+            'EUR': 100.0276
+        },
+        'cbrf': {
+            'USD': 90.3503,
+            'EUR': 99.0276
+        }
+    },
+    date(2023, 10, 2): {
+        'currencylayer': {
+            'USD': 92.3503,
+            'EUR': 101.0276
+        },
+        'cbrf': {
+            'USD': 91.3503,
+            'EUR': 100.0276
+        }
+    },
+    date(2023, 10, 3): {
+        'currencylayer': {
+            'USD': 93.3503,
+            'EUR': 102.0276
+        },
+        'cbrf': {
+            'USD': 92.3503,
+            'EUR': 101.0276
+        }
+    }
+}
+
+# CURRENCIES = ['USD', 'EUR', 'GBP', 'RUB', 'UAH', 'CNY']
+CURRENCIES = ['USD', 'EUR']
+CURR_COLORS = {'USD': 'green', 'EUR': 'red'}
 
 
-def get_limits(currencylayer: list, cbrf: list):
-    sum_list = set(currencylayer)
-    [sum_list.add(x) for x in cbrf]
-    return min(sum_list) - 1, max(sum_list) + 1
+def add_labels(line):
+    x, y = line.get_data()
+    labels = map(','.join, zip(map(lambda s: '%g' % s, x), map(lambda s: '%g' % s, y)))
+    map(plt.text, x, y, labels)
 
 
-def generate_graf(currencylayer_x: list, currencylayer_y: list, cbrf_x: list, cbrf_y: list):
-    plt.plot(currencylayer_x, currencylayer_y, color='green', linestyle='dashed', linewidth=2,
-             marker='o', markerfacecolor='blue', markersize=10, label='Currencylayer')
+def generate_graf(currency: dict):
+    sorted_currency_dict = OrderedDict(sorted(currency.items()))
 
-    plt.plot(cbrf_x, cbrf_y, color='red', linestyle='dashed', linewidth=2,
-             marker='o', markerfacecolor='brown', markersize=10, label='CBRF')
+    common_x = [date.strftime(d, '%d.%m.%Y') for d in sorted_currency_dict]
 
-    plt.ylim(get_limits(currencylayer_x, cbrf_x))
-    plt.xlim(get_limits(currencylayer_y, cbrf_y))
+    print(*common_x)
 
-    plt.xlabel('Date')
-    plt.ylabel('Cost')
+    # x_limit = (min(common_x), max(common_x))
+    # y_limit = (80.0001, 110.0001)
 
-    plt.title('Dollar fluctuations')
+    plt.gca().yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+
+    plt.gcf().autofmt_xdate()
+
+    for curr_name in CURRENCIES:
+
+        currencylayer_y = []
+        cbrf_y = []
+
+        for value in sorted_currency_dict.values():
+            for a, b in OrderedDict(sorted(value.items())).items():
+                if a == 'currencylayer':
+                    currencylayer_y.append(b[curr_name])
+                elif a == 'cbrf':
+                    cbrf_y.append(b[curr_name])
+
+        print(f'currencylayer: {curr_name}', *currencylayer_y, CURR_COLORS[curr_name])
+        print(f'cbrf: {curr_name}', *cbrf_y, CURR_COLORS[curr_name])
+
+        line1, = plt.plot(common_x, currencylayer_y, color=CURR_COLORS[curr_name], linestyle='dashed', linewidth=1,
+                          marker='.', markerfacecolor=CURR_COLORS[curr_name], markersize=5,
+                          label=f'Currencylayer: {curr_name}')
+
+        add_labels(line1)
+
+        line2, = plt.plot(common_x, cbrf_y, color=CURR_COLORS[curr_name], linestyle='dashed', linewidth=1,
+                          marker='.', markerfacecolor=CURR_COLORS[curr_name], markersize=5, label=f'CBRF: {curr_name}')
+
+        add_labels(line2)
+
+    # plt.ylim(y_limit)
+    # plt.xlim(x_limit)
+
+    # plt.xlabel('Date')
+    plt.ylabel('Rate, rub')
+
+    plt.title('Currency fluctuations')
     plt.legend()
     plt.show()
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    currencylayer_x = [1, 2, 3, 4, 5, 6]
-    currencylayer_y = [2, 4, 1, 5, 2, 6]
-
-    cbrf_x = [1, 2, 3, 4, 5, 6]
-    cbrf_y = [1, 3, 0, 4, 1, 5]
-
-    generate_graf(currencylayer_x=currencylayer_x, currencylayer_y=currencylayer_y,
-                  cbrf_x=cbrf_x, cbrf_y=cbrf_y)
+    generate_graf(CURRENCY_DICT)
