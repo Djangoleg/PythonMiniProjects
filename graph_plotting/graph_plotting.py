@@ -42,12 +42,6 @@ CURRENCIES = ['USD', 'EUR']
 CURR_COLORS = {'USD': 'green', 'EUR': 'red'}
 
 
-def add_labels(line):
-    x, y = line.get_data()
-    labels = map(','.join, zip(map(lambda s: '%g' % s, x), map(lambda s: '%g' % s, y)))
-    map(plt.text, x, y, labels)
-
-
 def generate_graf(currency: dict):
     sorted_currency_dict = OrderedDict(sorted(currency.items()))
 
@@ -77,16 +71,12 @@ def generate_graf(currency: dict):
         print(f'currencylayer: {curr_name}', *currencylayer_y, CURR_COLORS[curr_name])
         print(f'cbrf: {curr_name}', *cbrf_y, CURR_COLORS[curr_name])
 
-        line1, = plt.plot(common_x, currencylayer_y, color=CURR_COLORS[curr_name], linestyle='dashed', linewidth=1,
-                          marker='.', markerfacecolor=CURR_COLORS[curr_name], markersize=5,
-                          label=f'Currencylayer: {curr_name}')
+        plt.plot(common_x, currencylayer_y, color=CURR_COLORS[curr_name], linestyle='dashed', linewidth=1,
+                 marker='.', markerfacecolor=CURR_COLORS[curr_name], markersize=5,
+                 label=f'Currencylayer: {curr_name}')
 
-        add_labels(line1)
-
-        line2, = plt.plot(common_x, cbrf_y, color=CURR_COLORS[curr_name], linestyle='dashed', linewidth=1,
-                          marker='.', markerfacecolor=CURR_COLORS[curr_name], markersize=5, label=f'CBRF: {curr_name}')
-
-        add_labels(line2)
+        plt.plot(common_x, cbrf_y, color=CURR_COLORS[curr_name], linestyle='dashed', linewidth=1,
+                 marker='.', markerfacecolor=CURR_COLORS[curr_name], markersize=5, label=f'CBRF: {curr_name}')
 
     # plt.ylim(y_limit)
     # plt.xlim(x_limit)
