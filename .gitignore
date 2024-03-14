@@ -8,5 +8,6 @@ venv/
 !**/migrations
 !**/migrations/__init__.py
 img/
+log/
 *.jpg
 
