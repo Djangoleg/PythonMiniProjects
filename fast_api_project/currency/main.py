@@ -1,16 +1,12 @@
-from datetime import datetime
-from typing import Tuple
-
 import logger
 import logging
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-import pytz
 
-from config import APP_LOGGER_NAME, TIME_ZONE
-from .crud import get_currency_provider, get_currency, create_currency_rate as db_create_currency_rate
-from .currency_rates_getter import get_exchange_rates_currencylayer, get_exchange_rates_cbrf
+from config import APP_LOGGER_NAME
+
 from .database import SessionLocal
+from .get_currency_rate_helper import get_exchange_rate_data, create_currency_rate, get_currency_rate_string
 from .schemas import CurrencyRateRequestData
 
 app_logger = logging.getLogger(APP_LOGGER_NAME)
@@ -30,72 +26,14 @@ def get_db():
         db.close()
 
 
-def get_currency_rate_string(
-        rate_result: dict, currency_source: list, source: str
-) -> str:
-    """
-    Result string formation.
-    """
-    if not rate_result:
-        return str()
-
-    result = f"✅ <b>{source.upper()}</b>:\n"
-
-    for curr in sorted(currency_source):
-        if curr in rate_result:
-            result += f"{curr.upper()}: {rate_result[curr]}\n"
-
-    return result
-
-
-def create_currency_rate(db: Session, currencylayer: dict, cbrf: dict, target: str) -> None:
-    """
-    Create CurrencyRate records.
-    """
-    try:
-        provider_currency_layer = get_currency_provider(db=db, name="Currencylayer")
-        provider_cbrf = get_currency_provider(db=db, name="CBRF")
-        date = datetime.now(tz=pytz.timezone(TIME_ZONE))
-
-        currency_target = get_currency(db=db, name=target)
-
-        for key, value in currencylayer.items():
-            currency = get_currency(db=db, name=key)
-            if currency:
-                db_create_currency_rate(db=db, request_date=date, currency=currency,
-                                        provider=provider_currency_layer,
-                                        master_currency=currency_target, amount=value)
-
-        for key, value in cbrf.items():
-            currency = get_currency(db=db, name=key)
-            if currency:
-                db_create_currency_rate(db=db, request_date=date, currency=currency,
-                                        provider=provider_cbrf,
-                                        master_currency=currency_target, amount=value)
-
-    except Exception as e:
-        app_logger.error(f"Error create CurrencyRate records: {e}")
-
-
-def get_exchange_rate_data(source: list, target: str) -> tuple[dict, dict]:
-    """
-    Get currency exchange rate.
-    """
-    source.append(target)
-
-    # Get from Currencylayer.
-    currencylayer = get_exchange_rates_currencylayer(
-        currencies=source, target=target
-    )
-
-    # Get from CBRF.
-    cbrf = get_exchange_rates_cbrf(currencies=source)
-
-    return currencylayer, cbrf
-
-
 @app.get("/currency/rate/")
 async def get_currency_rate(db: Session = Depends(get_db), data: CurrencyRateRequestData = None):
+    """
+    Get currency rate.
+    :param db:
+    :param data:
+    :return:
+    """
     if data is None:
         error_message = "Request data is empty"
         app_logger.error(error_message)

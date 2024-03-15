@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import Column, ForeignKey, Integer, String, Date, Numeric, event, DateTime
+from sqlalchemy import Column, ForeignKey, Integer, String, Numeric, event, DateTime
 from sqlalchemy.orm import relationship
 
 from .database import Base, engine
@@ -24,7 +24,7 @@ class CurrencyRate(Base):
     __tablename__ = "CurrencyRate"
 
     id = Column(Integer, primary_key=True)
-    request_date = Column(DateTime, index=True, default=datetime.now(timezone.utc))
+    request_date = Column(DateTime(timezone=True), index=True, default=datetime.now(timezone.utc))
     currency_id = Column(Integer, ForeignKey('Currency.id'), index=True)
     currency = relationship("Currency", primaryjoin="Currency.id == CurrencyRate.currency_id")
     provider_id = Column(Integer, ForeignKey('Provider.id'), index=True)
