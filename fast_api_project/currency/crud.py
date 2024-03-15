@@ -1,7 +1,8 @@
+from datetime import datetime
+
 from sqlalchemy.orm import Session
 
 from currency import models
-from currency.schemas import CurrencyRateCreate
 
 
 def get_currency_provider(db: Session, name: str):
@@ -24,15 +25,20 @@ def get_currency(db: Session, name: str):
     return db.query(models.Currency).filter(models.Currency.name == name).first()
 
 
-def create_currency_rate(db: Session, cr: CurrencyRateCreate):
+def create_currency_rate(db: Session, request_date: datetime, currency: int, provider: int,
+                         master_currency: int, amount: float):
     """
     Create a new currency rate in the database.
+    :param master_currency:
+    :param provider:
+    :param currency:
+    :param request_date:
+    :param amount:
     :param db:
-    :param cr:
     :return: currency_rate
     """
-    db_currency_rate = models.CurrencyRate(request_date=cr.request_date, currency=cr.currency, provider=cr.provider,
-                                           master_currency=cr.master_currency, amount=cr.amount)
+    db_currency_rate = models.CurrencyRate(request_date=request_date, currency=currency, provider=provider,
+                                           master_currency=master_currency, amount=amount)
     db.add(db_currency_rate)
     db.commit()
     db.refresh(db_currency_rate)

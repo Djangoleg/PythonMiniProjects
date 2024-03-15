@@ -2,9 +2,14 @@ import os
 import json
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 TIME_ZONE = "Europe/Moscow"
 
 BASE_DIR = Path(__file__).resolve().parent
+
+load_dotenv(BASE_DIR / ".env")
+
 APP_LOGGER_NAME = 'currency'
 NOTIFY_DATE_TIME_PATTERN = '%d.%m.%Y %H:%M:%S'
 

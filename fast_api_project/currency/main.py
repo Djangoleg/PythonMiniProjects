@@ -11,7 +11,7 @@ from config import APP_LOGGER_NAME, TIME_ZONE
 from .crud import get_currency_provider, get_currency, create_currency_rate as db_create_currency_rate
 from .currency_rates_getter import get_exchange_rates_currencylayer, get_exchange_rates_cbrf
 from .database import SessionLocal
-from .schemas import CurrencyRateRequestData, CurrencyRateCreate
+from .schemas import CurrencyRateRequestData
 
 app_logger = logging.getLogger(APP_LOGGER_NAME)
 
@@ -62,28 +62,16 @@ def create_currency_rate(db: Session, currencylayer: dict, cbrf: dict, target: s
         for key, value in currencylayer.items():
             currency = get_currency(db=db, name=key)
             if currency:
-
-                crc = CurrencyRateCreate()
-                crc.request_date = date
-                crc.currency = currency.id
-                crc.provider = provider_currency_layer.id
-                crc.master_currency = currency_target.id
-                crc.amount = value
-
-                db_create_currency_rate(db=db, cr=crc)
+                db_create_currency_rate(db=db, request_date=date, currency=currency,
+                                        provider=provider_currency_layer,
+                                        master_currency=currency_target, amount=value)
 
         for key, value in cbrf.items():
             currency = get_currency(db=db, name=key)
             if currency:
-
-                crc = CurrencyRateCreate()
-                crc.request_date = date
-                crc.currency = currency.id
-                crc.provider = provider_cbrf.id
-                crc.master_currency = currency_target.id
-                crc.amount = value
-
-                db_create_currency_rate(db=db, cr=crc)
+                db_create_currency_rate(db=db, request_date=date, currency=currency,
+                                        provider=provider_cbrf,
+                                        master_currency=currency_target, amount=value)
 
     except Exception as e:
         app_logger.error(f"Error create CurrencyRate records: {e}")
@@ -126,7 +114,7 @@ async def get_currency_rate(db: Session = Depends(get_db), data: CurrencyRateReq
     app_logger.info(data)
 
     source = data.currencies_source
-    target = data.currencies_target
+    target = data.currency_target
 
     er_data = get_exchange_rate_data(source, target)
 
