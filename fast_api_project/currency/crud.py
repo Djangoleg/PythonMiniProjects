@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, load_only
 
 from currency import models
 
@@ -43,3 +43,12 @@ def create_currency_rate(db: Session, request_date: datetime, currency: int, pro
     db.commit()
     db.refresh(db_currency_rate)
     return db_currency_rate
+
+
+def get_currency_rates_request_date(db: Session):
+    return db.query(models.CurrencyRate.request_date).order_by(models.CurrencyRate.request_date).distinct()
+
+
+def get_currency_rates(db: Session, start_date: datetime, end_date: datetime):
+    return db.query(models.CurrencyRate).filter(models.CurrencyRate.request_date >= start_date,
+                                                models.CurrencyRate.request_date <= end_date)

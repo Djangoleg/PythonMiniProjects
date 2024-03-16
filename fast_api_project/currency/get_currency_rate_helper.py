@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy.orm import Session
 
-from config import TIME_ZONE, APP_LOGGER_NAME
+from config import APP_LOGGER_NAME
 from .crud import get_currency_provider, get_currency, create_currency_rate as db_create_currency_rate
 from .currency_rates_getter import get_exchange_rates_currencylayer, get_exchange_rates_cbrf
 

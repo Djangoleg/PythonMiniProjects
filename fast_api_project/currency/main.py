@@ -1,3 +1,5 @@
+from starlette.responses import StreamingResponse
+
 import logger
 import logging
 from fastapi import FastAPI, Depends, HTTPException
@@ -7,6 +9,7 @@ from config import APP_LOGGER_NAME
 
 from .database import SessionLocal
 from .get_currency_rate_helper import get_exchange_rate_data, create_currency_rate, get_currency_rate_string
+from .plot_helper import get_currency_rates_data, generate_plot
 from .schemas import CurrencyRateRequestData
 
 app_logger = logging.getLogger(APP_LOGGER_NAME)
@@ -16,7 +19,7 @@ app = FastAPI()
 
 def get_db():
     """
-    Get database
+    Get database session.
     :return:
     """
     db = SessionLocal()
@@ -64,4 +67,25 @@ async def get_currency_rate(db: Session = Depends(get_db), data: CurrencyRateReq
                 f"{get_currency_rate_string(er_data[0], source, "currencylayer")}"
     }
 
+    app_logger.info(f"Response: {response}")
+
     return response
+
+
+@app.get("/currency/plot/")
+async def get_currency_rates_plot(db: Session = Depends(get_db)):
+    """
+    Get currency rates plot.
+    """
+    app_logger.info(f"A request to generate a chart was received")
+
+    currency_rates_data = get_currency_rates_data(db)
+    buf = generate_plot(currency_rates_data)
+    if buf is None:
+        error_message = "No data for the graph"
+        app_logger.error(error_message)
+        raise HTTPException(status_code=404, detail=error_message)
+
+    app_logger.info(f"Response sent")
+
+    return StreamingResponse(buf, media_type="image/jpeg")

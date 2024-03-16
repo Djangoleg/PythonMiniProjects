@@ -12,12 +12,18 @@ class Currency(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, index=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Provider(Base):
     __tablename__ = "Provider"
 
     id = Column(Integer, primary_key=True)
     name = Column(String, index=True)
+
+    def __str__(self):
+        return self.name
 
 
 class CurrencyRate(Base):

@@ -11,7 +11,6 @@ BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(BASE_DIR / ".env")
 
 APP_LOGGER_NAME = 'currency'
-NOTIFY_DATE_TIME_PATTERN = '%d.%m.%Y %H:%M:%S'
 
 # Telegram settings.
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
@@ -27,4 +26,4 @@ CBRF_DAILY_URL = os.getenv("CBRF_DAILY_URL")
 
 CURRENCY_PLOT_COLORS = {"USD": "green", "EUR": "red"}
 CURRENCY_PLOT = ["USD", "EUR"]
-CURRENCY_PLOT_FILE_PATH = "media/plot/"
+NUMBER_DAY_FOR_PLOT = 3
