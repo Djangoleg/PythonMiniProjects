@@ -1,7 +1,5 @@
 import logging
 
-from fastapi import Depends
-
 import logger
 from celery_app import app
 from config import APP_LOGGER_NAME

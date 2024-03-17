@@ -30,5 +30,5 @@ CELERY_BROKER_URL = "redis://localhost:6379/11"
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 # Every day at 3AM o'clock.
-RUN_UPDATE_CURRENCY_RATE_TASK_CRONE = crontab(minute="*")
-# RUN_UPDATE_CURRENCY_RATE_TASK_CRONE = crontab(minute="0", hour="3")
+# RUN_UPDATE_CURRENCY_RATE_TASK_CRONE = crontab(minute="*")
+RUN_UPDATE_CURRENCY_RATE_TASK_CRONE = crontab(minute="0", hour="3")
