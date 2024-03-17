@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from config import APP_LOGGER_NAME
 
-from .database import SessionLocal
+from .database import get_db
 from .get_currency_rate_helper import get_exchange_rate_data, create_currency_rate, get_currency_rate_string
 from .plot_helper import get_currency_rates_data, generate_plot
 from .schemas import CurrencyRateRequestData
@@ -15,18 +15,6 @@ from .schemas import CurrencyRateRequestData
 app_logger = logging.getLogger(APP_LOGGER_NAME)
 
 app = FastAPI()
-
-
-def get_db():
-    """
-    Get database session.
-    :return:
-    """
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 @app.get("/currency/rate/")
