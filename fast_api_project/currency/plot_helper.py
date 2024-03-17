@@ -6,6 +6,7 @@ from datetime import date, datetime
 from io import BytesIO
 
 import matplotlib.pyplot as plt
+import pytz
 from matplotlib.ticker import FormatStrFormatter
 from sqlalchemy.orm import Session
 
@@ -14,7 +15,7 @@ from config import (
     CURRENCY_PLOT_COLORS,
     CURRENCY_PLOT,
     NUMBER_DAY_FOR_PLOT,
-    APP_LOGGER_NAME,
+    APP_LOGGER_NAME, TIME_ZONE,
 )
 
 app_logger = logging.getLogger(APP_LOGGER_NAME)
@@ -42,6 +43,7 @@ def get_currency_rates_data(db: Session) -> dict:
     """
 
     data = {}
+    current_tz = pytz.timezone(TIME_ZONE)
 
     try:
         currency_all_request_dates = get_currency_rates_request_date(db)
@@ -87,25 +89,29 @@ def get_currency_rates_data(db: Session) -> dict:
 
             if currency_rate:
                 for curr in currency_rate:
-                    if curr.request_date.date() in data:
-                        if str(curr.provider) in data[curr.request_date.date()]:
+
+                    utc_date = curr.request_date.replace(tzinfo=zoneinfo.ZoneInfo(key="UTC"))
+                    current_date = utc_date.astimezone(current_tz)
+
+                    if current_date.date() in data:
+                        if str(curr.provider) in data[current_date.date()]:
                             if (
                                     str(curr.currency)
-                                    in data[curr.request_date.date()][str(curr.provider)]
+                                    in data[current_date.date()][str(curr.provider)]
                             ):
-                                data[curr.request_date.date()][str(curr.provider)][
+                                data[current_date.date()][str(curr.provider)][
                                     str(curr.currency)
                                 ] = curr.amount
                             else:
-                                data[curr.request_date.date()][str(curr.provider)][
+                                data[current_date.date()][str(curr.provider)][
                                     str(curr.currency)
                                 ] = curr.amount
                         else:
-                            data[curr.request_date.date()][str(curr.provider)] = {
+                            data[current_date.date()][str(curr.provider)] = {
                                 str(curr.currency): curr.amount
                             }
                     else:
-                        data[curr.request_date.date()] = {
+                        data[current_date.date()] = {
                             str(curr.provider): {str(curr.currency): curr.amount}
                         }
 
