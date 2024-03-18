@@ -1,0 +1,46 @@
+version: '3.1'
+
+services:
+  home_services:
+    build: ./home_services
+    restart: always
+    privileged: true
+    volumes:
+      - ./home_services:/usr/local/home_services
+    #expose:
+    ports:
+      - 8004:8000
+    environment:
+      - TZ=Europe/Moscow
+    command:
+      bash -c "
+      cd /usr/local/home_services/currency &&
+      uvicorn main:app --host 0.0.0.0 --reload
+  redis:
+    build: ./redis
+    restart: always
+    volumes: 
+      - ./redis:/usr/local/redisdata
+    ports:
+      - '6379:6379'
+    depends_on:
+      - home_services
+    command: redis-server --save 20 1 --loglevel warning
+  celery:
+    build: ./home_services
+    command: bash -c "
+             cd /usr/local/home_services &&
+             celery -A celery_app worker --loglevel=info"
+    volumes:
+      - ./home_services:/usr/local/home_services
+    depends_on:
+      - redis
+  celery-beat:
+    build: ./home_services
+    command: bash -c "
+             cd /usr/local/home_services &&
+             celery -A celery_app beat --loglevel=info"
+    volumes:
+      - ./home_services:/usr/local/home_services
+    depends_on:
+      - redis
