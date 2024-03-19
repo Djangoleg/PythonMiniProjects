@@ -15,7 +15,7 @@ services:
     command:
       bash -c "
       cd /usr/local/home_services &&
-      uvicorn currency.main:app --host 0.0.0.0 --reload"
+      uvicorn main:app --host 0.0.0.0 --reload"
   redis:
     build: ./redis
     restart: always

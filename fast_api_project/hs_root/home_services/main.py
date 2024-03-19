@@ -7,10 +7,10 @@ from sqlalchemy.orm import Session
 
 from config import APP_LOGGER_NAME
 
-from .database import get_db
-from .get_currency_rate_helper import get_exchange_rate_data, create_currency_rate, get_currency_rate_string
-from .plot_helper import get_currency_rates_data, generate_plot
-from .schemas import CurrencyRateRequestData
+from currency.database import get_db
+from currency.get_currency_rate_helper import get_exchange_rate_data, create_currency_rate, get_currency_rate_string
+from currency.plot_helper import get_currency_rates_data, generate_plot
+from currency.schemas import CurrencyRateRequestData
 
 app_logger = logging.getLogger(APP_LOGGER_NAME)
 
