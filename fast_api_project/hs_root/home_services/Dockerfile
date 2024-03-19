@@ -5,3 +5,4 @@ RUN mkdir -p /usr/local/home_services
 RUN pip3 install --upgrade pip
 COPY ./ /usr/local/home_services
 RUN pip3 install -r /usr/local/home_services/requirements.txt
+WORKDIR /usr/local/home_services
