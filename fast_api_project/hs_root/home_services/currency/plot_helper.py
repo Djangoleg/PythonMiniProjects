@@ -2,7 +2,7 @@ import io
 import zoneinfo
 import logging
 from collections import OrderedDict
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from io import BytesIO
 
 import matplotlib.pyplot as plt
@@ -21,20 +21,42 @@ from config import (
 app_logger = logging.getLogger(APP_LOGGER_NAME)
 
 
-def find_middle(lst):
-    if not lst:
-        return None
+def split_request_dates(sorted_list: list, number_point: int) -> list:
+    """
+    Return the control points of the graph.
+    """
+    source_len = len(sorted_list)
+    index_list = list()
+    div_number = 1 if source_len // number_point == 0 else source_len // number_point
+    for x in range(source_len):
+        if x % div_number == 0:
+            if len(index_list) < number_point - 1:
+                index_list.append(x)
 
-    length = len(lst)  # Get the length of the list
+    # Added last index.
+    index_list.append(source_len - 1)
 
-    if length % 2 != 0:  # Check if the length is odd
-        middle_index = length // 2
-        return lst[middle_index]
+    result_list = list()
+    for index in index_list:
+        result_list.append(sorted_list[index])
 
-    # If the length is even
-    first_middle_index = length // 2 - 1
-    second_middle_index = length // 2
-    return lst[first_middle_index], lst[second_middle_index]
+    return result_list
+
+
+def remove_extra_keys(data: dict, number_point: int):
+    """
+    Remove the extra keys if it needs. Solving a time zone problem.
+    """
+    if len(data) > number_point:
+        del_keys = list()
+        for k, _ in data.items():
+            extra_key = k - timedelta(days=1)
+            if extra_key in data:
+                del_keys.append(extra_key)
+
+        if len(del_keys) > 0:
+            for key in del_keys:
+                data.pop(key)
 
 
 def get_currency_rates_data(db: Session) -> dict:
@@ -55,16 +77,7 @@ def get_currency_rates_data(db: Session) -> dict:
         if len(rd) < NUMBER_DAY_FOR_PLOT:
             return data
 
-        request_dates = list()
-        request_dates.append(rd[0])
-
-        middle = find_middle(rd)
-        if isinstance(middle, date):
-            request_dates.append(middle)
-        else:
-            [request_dates.append(x) for x in middle]
-
-        request_dates.append(rd[len(rd) - 1])
+        request_dates = split_request_dates(rd, NUMBER_DAY_FOR_PLOT)
 
         for r_date in request_dates:
             start_date_time = datetime(
@@ -114,6 +127,9 @@ def get_currency_rates_data(db: Session) -> dict:
                         data[current_date.date()] = {
                             str(curr.provider): {str(curr.currency): curr.amount}
                         }
+
+        # Remove the extra keys if it needs.
+        remove_extra_keys(data, NUMBER_DAY_FOR_PLOT)
 
         return data
 

@@ -23,7 +23,7 @@ CBRF_DAILY_URL = os.getenv("CBRF_DAILY_URL")
 
 CURRENCY_PLOT_COLORS = {"USD": "green", "EUR": "red"}
 CURRENCY_PLOT = ["USD", "EUR"]
-NUMBER_DAY_FOR_PLOT = 3
+NUMBER_DAY_FOR_PLOT = 5
 
 # Celery.
 # CELERY_BROKER_URL = "redis://redis:6379/11"

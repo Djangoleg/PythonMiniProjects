@@ -13,7 +13,7 @@ from config import (
 app_logger = logging.getLogger(APP_LOGGER_NAME)
 
 
-def get_exchange_rates_currencylayer(currencies: list, target: str) -> dict:
+async def get_exchange_rates_currencylayer(currencies: list, target: str) -> dict:
     request = None
     cur_val = dict()
 
@@ -106,7 +106,7 @@ def get_exchange_rates_currencylayer(currencies: list, target: str) -> dict:
         return cur_val
 
 
-def get_exchange_rates_cbrf(currencies: list, target: str = None) -> dict:
+async def get_exchange_rates_cbrf(currencies: list, target: str = None) -> dict:
     """
     TODO: Engage target currency.
     """

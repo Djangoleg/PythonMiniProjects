@@ -45,7 +45,7 @@ async def get_currency_rate(db: Session = Depends(get_db), data: CurrencyRateReq
     source = data.currencies_source
     target = data.currency_target
 
-    er_data = get_exchange_rate_data(source, target)
+    er_data = await get_exchange_rate_data(source, target)
 
     # Save data.
     create_currency_rate(db=db, currencylayer=er_data[0], cbrf=er_data[1], target=target)

@@ -1,4 +1,5 @@
 import logging
+from asyncio import create_task, wait, gather
 from datetime import datetime, timezone
 
 from sqlalchemy.orm import Session
@@ -40,21 +41,24 @@ def create_currency_rate(db: Session, currencylayer: dict, cbrf: dict, target: s
         app_logger.error(f"Error create CurrencyRate records: {e}")
 
 
-def get_exchange_rate_data(source: list, target: str) -> tuple[dict, dict]:
+async def get_exchange_rate_data(source: list, target: str) -> tuple[dict, dict]:
     """
     Get currency exchange rate.
     """
     source.append(target)
 
     # Get from Currencylayer.
-    currencylayer = get_exchange_rates_currencylayer(
+    currencylayer_task = create_task(get_exchange_rates_currencylayer(
         currencies=source, target=target
-    )
+    ))
 
     # Get from CBRF.
-    cbrf = get_exchange_rates_cbrf(currencies=source)
+    cbrf_task = create_task(get_exchange_rates_cbrf(currencies=source))
 
-    return currencylayer, cbrf
+    # return await gather(currencylayer_task, cbrf_task)
+    # Wait for them to finish.
+    await wait([currencylayer_task, cbrf_task])
+    return currencylayer_task.result(), cbrf_task.result()
 
 
 def get_currency_rate_string(
