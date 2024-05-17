@@ -6,6 +6,15 @@ from sqlalchemy.orm import relationship
 from .database import Base, engine
 
 
+# Define a User model for your database
+class User(Base):
+    __tablename__ = "User"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True)
+    password = Column(String)
+
+
 class Currency(Base):
     __tablename__ = "Currency"
 
@@ -68,6 +77,12 @@ def insert_currency(target, connection, **kwargs):
 
     for ind, curr in enumerate(currencies_source, start=1):
         connection.execute(target.insert(), {'id': ind, 'name': curr})
+
+
+@event.listens_for(User.__table__, 'after_create')
+def insert_user(target, connection, **kwargs):
+    hashed_password = '1adf87ecdc7eb0c5b27760c96df35ea50026a39804c453fe4ccc07474a550597'
+    connection.execute(target.insert(), {'id': 1, 'username': 'post', 'password': hashed_password})
 
 
 # Create database and table.

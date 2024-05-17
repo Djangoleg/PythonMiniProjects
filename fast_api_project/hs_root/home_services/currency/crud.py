@@ -25,6 +25,17 @@ def get_currency(db: Session, name: str):
     return db.query(models.Currency).filter(models.Currency.name == name).first()
 
 
+def get_user(db: Session, username: str):
+    """
+    Get a user.
+    :param db:
+    :param username:
+    :param password:
+    :return:
+    """
+    return db.query(models.User).filter(models.User.username == username).first()
+
+
 def create_currency_rate(db: Session, request_date: datetime, currency: int, provider: int,
                          master_currency: int, amount: float):
     """
