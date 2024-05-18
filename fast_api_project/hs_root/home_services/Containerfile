@@ -6,3 +6,7 @@ RUN pip3 install --upgrade pip
 COPY ./ /usr/local/home_services
 RUN pip3 install -r /usr/local/home_services/requirements.txt
 WORKDIR /usr/local/home_services
+
+# Start
+CMD cd /usr/local/home_services && \
+uvicorn main:app --host 0.0.0.0 --port 8004 --reload

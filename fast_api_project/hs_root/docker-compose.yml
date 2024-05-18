@@ -1,3 +1,4 @@
+# Deprecate. Use podman and POD.
 services:
   home_services:
     build: ./home_services
