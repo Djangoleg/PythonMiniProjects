@@ -31,20 +31,5 @@ podman create --pod homeservicepod --name home_services_celery_beat --volume /ho
 podman pod start homeservicepod
 
 
-# Delete POD with containers.
-# podman pod rm homeservicepod
-
-# # Delete containers.
-# podman rm home_services_celery_beat
-# podman rm home_services_celery
-# podman rm home_services_redis
-# podman rm home_services
-
-# Delete images.
-# podman rmi home_services_celery_beat && \
-# podman rmi home_services_celery && \
-# podman rmi home_services_redis && \
-# podman rmi home_services
-
-# chmod +x run_home_services.sh
+# chmod +x create_home_service_pod.sh
 # Check http://localhost:8004/docs
