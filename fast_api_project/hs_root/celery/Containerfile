@@ -1,3 +1,4 @@
 FROM home_services
+ENV TZ=Europe/Moscow
 CMD cd /usr/local/home_services && \
 celery -A celery_app worker --loglevel=info

@@ -1,3 +1,4 @@
+import asyncio
 import logging
 
 import logger
@@ -22,7 +23,7 @@ def update_currency_rate_task():
         generator = get_db()
         db = next(generator)
 
-        er_data = get_exchange_rate_data(currencies_source, currency_target)
+        er_data = asyncio.run(get_exchange_rate_data(currencies_source, currency_target))
         celery_logger.info(f"End updating currency rate task. Data: {er_data}")
 
         # Save data.

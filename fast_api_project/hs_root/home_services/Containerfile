@@ -1,6 +1,7 @@
 FROM python:3.12
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV TZ=Europe/Moscow
 RUN mkdir -p /usr/local/home_services
 RUN pip3 install --upgrade pip
 COPY ./ /usr/local/home_services
