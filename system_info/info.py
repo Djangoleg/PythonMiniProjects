@@ -13,7 +13,6 @@ mem_free = psutil.virtual_memory().available / (1024.0 ** 3)  # in GB
 mem_used = mem_total - mem_free
 
 # Get CPU information
-#cpu_name = platform.processor()
 cpu_name = get_cpu_info()['brand_raw']
 core_numbers = get_cpu_info()['count']
 cpu_load = psutil.cpu_percent(interval=1)  # get CPU load over 1 second
