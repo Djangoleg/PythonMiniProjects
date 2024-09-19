@@ -112,26 +112,52 @@ def get_ip_information():
     return ip_address, ip_address_external
 
 
+def get_system_information():
+    """
+    Get a string containing the system information of the machine.
+
+    This function gets the OS name, version, and architecture, the total,
+    free and used memory, the name, number of cores and load of the CPU,
+    the total, free and used storage space of the root partition and the
+    percentage of the used storage and the internal and external IP
+    addresses of the machine.
+
+    Returns:
+        str: A string containing the system information of the machine.
+    """
+    # Get the OS name, version, and architecture
+    os_info = get_os_info()
+    # Create a string containing the OS information
+    os_info_text = f"OS: {os_info[0]} {os_info[1]} ({os_info[2]})"
+
+    # Get the total, free and used memory
+    memory_info = get_memory_info()
+    # Create a string containing the memory information
+    memory_info_text = f"Memory: Total={memory_info[0]:.2f}GB, Free={memory_info[1]:.2f}GB, Used={memory_info[2]:.2f}GB"
+
+    # Get the name, number of cores and load of the CPU
+    cpu_info = get_cpu_information()
+    # Create a string containing the CPU information
+    cpu_info_text = f"CPU: {cpu_info[0]}, Cores={cpu_info[1]}, Load={cpu_info[2]}%"
+
+    # Get the total, free and used storage space of the root partition
+    # and the percentage of the used storage
+    hdd_info = get_hdd_information()
+    # Create a string containing the HDD information
+    hdd_info_text = f"HDD: Total={hdd_info[0]:.2f}GB, Free={hdd_info[1]:.2f}GB, Used={hdd_info[2]:.2f}GB, Used%={hdd_info[3]}%"
+
+    # Get the internal and external IP addresses of the machine
+    ip_info = get_ip_information()
+    # Create a string containing the IP information
+    ip_info_text = f"IP: {ip_info[0]}, {ip_info[1]}"
+
+    # Create a string containing all the system information
+    system_info = f"💻 {os_info_text}\n💾 {memory_info_text}\n🖥 {cpu_info_text}\n📼 {hdd_info_text}\n🌍 {ip_info_text}"
+
+    return system_info
+
 # for key, value in get_cpu_info().items():
 #         print("{0}: {1}".format(key, value))
 
 if __name__ == "__main__":
-    os_info = get_os_info()
-    os_info_text = f"OS: {os_info[0]} {os_info[1]} ({os_info[2]})"
-
-    memory_info = get_memory_info()
-    memory_info_text = f"Memory: Total={memory_info[0]:.2f}GB, Free={memory_info[1]:.2f}GB, Used={memory_info[2]:.2f}GB"
-
-    cpu_info = get_cpu_information()
-    cpu_info_text = f"CPU: {cpu_info[0]}, Cores={cpu_info[1]}, Load={cpu_info[2]}%"
-
-    hdd_info = get_hdd_information()
-    hdd_info_text = f"HDD: Total={hdd_info[0]:.2f}GB, Free={hdd_info[1]:.2f}GB, Used={hdd_info[2]:.2f}GB, Used%={hdd_info[3]}%"
-
-    ip_info = get_ip_information()
-    ip_info_text = f"IP: {ip_info[0]}, {ip_info[1]}"
-
-    system_info = (os_info_text + "\n" + memory_info_text + "\n" + cpu_info_text + "\n" +
-                   hdd_info_text + "\n" + ip_info_text)
-
-    print(system_info)
+    print(get_system_information())
