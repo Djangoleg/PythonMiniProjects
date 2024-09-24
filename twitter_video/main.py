@@ -92,6 +92,7 @@ def get_twitter_video(status_id: str) -> io.BytesIO | None:
 
 if __name__ == '__main__':
     tw_url = "https://x.com/itsfoss2/status/1838202526899798466"
+    tw_url = tw_url.split('?', 1)[0]
     status = tw_url.split('/')[-1]
     buffer = get_twitter_video(status)
 
