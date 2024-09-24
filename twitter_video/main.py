@@ -95,6 +95,7 @@ if __name__ == '__main__':
     status = tw_url.split('/')[-1]
     buffer = get_twitter_video(status)
 
-    with open(status + ".mp4", 'wb') as f:
-        # Write the file-like object to the file
-        f.write(buffer.read())
+    if buffer:
+        with open(status + ".mp4", 'wb') as f:
+            # Write the file-like object to the file
+            f.write(buffer.read())
